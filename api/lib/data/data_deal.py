@@ -80,10 +80,8 @@ class MeageData(object):
             mer_dic = self._merge_all(need_mer["position"], res)
             mer_list.append(mer_dic)
             need_del.extend(need_mer["position"])
-
         res = array_dels(need_del, res)
-        for im in mer_list:
-            res.append(im)
+        res.extend(mer_list)
         self.data = res
 
     def _clean_by_cid_and_ctype(self):
@@ -112,12 +110,12 @@ class MeageData(object):
             if len(need_mer["position"]) <= 1:
                 continue
             mer_dic = self._merge_all(need_mer["position"], res)
+            print("mer_dic",mer_dic)
             mer_list.append(mer_dic)
             need_del.extend(need_mer["position"])
 
         res = array_dels(need_del, res)
-        for im in mer_list:
-            res.append(im)
+        res.extend(mer_list)
         self.data = res
 
 if __name__ == '__main__':
