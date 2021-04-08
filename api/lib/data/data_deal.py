@@ -1,4 +1,4 @@
-from api.utils.clean_mutil import array_dels
+from api.utils.array import array_dels,deal_merge_list
 class MeageData(object):
     def __init__(self, data):
         self.data = data
@@ -106,13 +106,17 @@ class MeageData(object):
                 e_list.append({"position": [index, ], "value": id_and_type})
         mer_list = []
         need_del = []
+        need_mers = []
         for need_mer in e_list:
             if len(need_mer["position"]) <= 1:
                 continue
-            mer_dic = self._merge_all(need_mer["position"], res)
+            need_mers.append(need_mer["position"])
+        need_mers = deal_merge_list(need_mers)
+        for need_mer in need_mers:
+            mer_dic = self._merge_all(need_mer, res)
             print("mer_dic",mer_dic)
             mer_list.append(mer_dic)
-            need_del.extend(need_mer["position"])
+            need_del.extend(need_mer)
 
         res = array_dels(need_del, res)
         res.extend(mer_list)

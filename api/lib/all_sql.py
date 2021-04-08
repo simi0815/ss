@@ -1,6 +1,6 @@
 from api.lib.mon_sql import MongoDatabase
 from api.lib.es_sql import ESDatabase
-from api.utils.clean_mutil import clean_mul, array_sub
+from api.utils.array import clean_mul, array_sub
 from api.lib.data.data_deal import MeageData
 
 
