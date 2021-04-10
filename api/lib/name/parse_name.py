@@ -11,7 +11,7 @@ def chinese_name(str):
     if 2 <= len(str) <= 3:
         sur = str[0:1]
         name = str[1:]
-        return name, "",sur
+        return name,sur
     if len(str) == 4:
         sur = str[0:2]
         name = str[2:4]

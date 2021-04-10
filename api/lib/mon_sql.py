@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 from api.conf.api_config import MONGO_ADDRESS, MONGO_PORT, MONGO_ONE_LIMIT
 from api.conf.mon_conf import MON_DB_REFL
-from api.lib.data.data_deal import MeageData
 from api.lib.exception import *
 from api.middleware import db_hook
 from api.lib.name.parse_name import handle_name, merge_name
@@ -37,7 +36,6 @@ class MongoDatabase(object):
         if con.get("type") != "name" or not name:
             raise ConditionNotName()
         first_n, last_n = handle_name(name)
-
         if not last_n:
             con = [{"first_name": first_n},
                    {"last_name": first_n},
@@ -145,8 +143,6 @@ class MongoDatabase(object):
                     one["resource"] = resource
                 _res.append(one)
         return _res
-
-
 
 
 if __name__ == '__main__':

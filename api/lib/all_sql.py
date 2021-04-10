@@ -12,14 +12,15 @@ class Searilizer():
         val = self.rd.get("val")
         type = self.rd.get("type")
         ctype = self.rd.get("ctype")
-        # if type in ["cid","gid"] and not ctype:
-        #     raise Exception("查询社交id,群id需选定社交类型")
+        if type in ["cid", "uname", "gid"] and not ctype:
+            raise Exception("社交类型搜索未检测到社交类型")
         if not val or not type:
             return None
         val = str(val)
         con = {
             "val": val,
-            "type": type
+            "type": type,
+            "ctype": ctype
         }
 
         return con
@@ -57,7 +58,8 @@ class AllDatabase(object):
             _res.extend(onr_all)
         # for i in _res:
         #     print(i)
-        back_re = self._clean_data(_res)
+        back_re = self._clean_data(_res,res_dict)
+
         res = {
             "errno": 0,
             "data": {
@@ -76,9 +78,10 @@ class AllDatabase(object):
             has_searches_tels.append(val)
         elif type == "email":
             has_searched_emails.append(val)
+
         # 将已有数据添加到已有表中
         def add_cur_emails_tels(one_res):
-            nonlocal cur_eamils,cur_tels
+            nonlocal cur_eamils, cur_tels
             if one_res.get("email"):
                 if isinstance(one_res.get("email"), list):
                     cur_eamils.extend(one_res.get("email"))
@@ -122,8 +125,31 @@ class AllDatabase(object):
         back_re.extend(es_res)
         return back_re
 
-    def _clean_data(self, data):
-        return MeageData(data=data).clean_data()
+    def _clean_data(self, data,con):
+        md = MeageData(data=data).clean_data()
+
+        return self._not_ctype_id(md,con)
+    def _not_ctype_id(self, data, con):
+        ctype = con.get("ctype")
+        if not ctype:
+            return data
+        _res = []
+        for one in data:
+            if not one.get("ctype"):
+                _res.append(one)
+
+            print(one.get("ctype"))
+            if isinstance(one.get("ctype"),list) :
+                if ctype in one.get("ctype"):
+                    print("ctype是列表{ctype}在列表中".format(ctype=ctype))
+                    _res.append(one)
+            else:
+                if ctype == one["ctype"]:
+
+                    _res.append(one)
+        return _res
+
+
 
     def err_msg(self, errno, msg):
         return {
@@ -134,7 +160,8 @@ class AllDatabase(object):
 
 if __name__ == '__main__':
     adb = AllDatabase()
-    re = adb.find_deepth({"val": "13168713930", "type": "tel"})
+    re = adb.find_deepth({"val": "1655092433", "type": "cid","ctype":"facebook"})
+    # re = adb.find_deepth({"val": "李某人", "type": "name"})
     if re["errno"] == 0:
         al_da = re["data"]["all_data"]
         for e in al_da:

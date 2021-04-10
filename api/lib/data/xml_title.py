@@ -14,7 +14,15 @@ col_keyword = {
     "cid": ["ID", "id"],
     "gid": ["群id", "群ID","gid"]
 }
-
+all_type = [
+    "facebook",
+    "twitter",
+    "vx",
+    "weibo",
+    "fbm",
+    "ly",
+    "telegram"
+]
 
 class XmlTitle():
     def __init__(self, path):
@@ -31,7 +39,8 @@ class XmlTitle():
             },
             "uname": {
                 "isChecked": False,
-                "col": None
+                "col": None,
+                "ctype":None,
             },
             "tel": {
                 "isChecked": False,
@@ -43,11 +52,13 @@ class XmlTitle():
             },
             "cid": {
                 "isChecked": False,
-                "col": None
+                "col": None,
+                "ctype":None
             },
             "gid": {
                 "isChecked": False,
-                "col": None
+                "col": None,
+                "ctype": None
             },
         }
         all_title = []
@@ -64,7 +75,8 @@ class XmlTitle():
                 title_dict[title]["col"] = i
         res = {
             "selectInfo": title_dict,
-            "allCol": all_title
+            "allCol": all_title,
+            "all_type":all_type
         }
         return res
 

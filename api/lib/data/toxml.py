@@ -28,34 +28,37 @@ class StoreToXML(object):
 
     def paser_content(self):
         data_list = []
+        print("self.data",self.data)
         for onr in self.data:
-            try:
-                name = onr.get("name", "")
-                addr = onr.get("location", "")
-                birthday = onr.get("birthday", "")
-                gender = onr.get("gender", "")
-                tel = onr.get("tel", "")
-                email = onr.get("email", "")
-                uname = onr.get("uname", "")
-                cid = onr.get("cid", "")
-                ctype = onr.get("ctype", "")
-                resource = onr.get("resource")
-                if resource :
-                    resource = RESOURCE_REFL.get(resource)
-                if isinstance(ctype, list):
-                    ctype = list(map(lambda n: CTYPE_REFLECT.get(n, ""), ctype))
+
+            name = onr.get("name", "")
+            addr = onr.get("location", "")
+            birthday = onr.get("birthday", "")
+            gender = onr.get("gender", "")
+            tel = onr.get("tel", "")
+            email = onr.get("email", "")
+            uname = onr.get("uname", "")
+            cid = onr.get("cid", "")
+            ctype = onr.get("ctype", "")
+            resource = onr.get("resource")
+
+            if isinstance(resource,list):
+                resource = list(map(lambda x: RESOURCE_REFL.get(x), resource))
+            else:
+                resource = RESOURCE_REFL.get(resource)
+            if isinstance(ctype, list):
+                ctype = list(map(lambda n: CTYPE_REFLECT.get(n, ""), ctype))
+            else:
+                ctype = CTYPE_REFLECT.get(ctype, "")
+            row = [name, addr, birthday, gender, tel, email, uname, cid, ctype,resource]
+            _row = []
+            for i in row:
+                if isinstance(i, list):
+                    i = map(lambda x: str(x), i)
+                    e = "\n".join(i)
+                    _row.append(e)
                 else:
-                    ctype = CTYPE_REFLECT.get(ctype, "")
-                row = [name, addr, birthday, gender, tel, email, uname, cid, ctype,resource]
-                _row = []
-                for i in row:
-                    if isinstance(i, list):
-                        i = map(lambda x: str(x), i)
-                        e = "\n".join(i)
-                        _row.append(e)
-                    else:
-                        _row.append(str(i))
-                data_list.append(_row)
-            except Exception:
-                continue
+                    _row.append(str(i))
+            data_list.append(_row)
+
         return data_list

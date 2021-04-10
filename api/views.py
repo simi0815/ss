@@ -15,12 +15,16 @@ import time
 
 class InfoList(View):
     def get(self, request, version, *args, **kwargs):
-        adb = AllDatabase()
-        res = adb.find_deepth(request.GET)
-        json_res = json.dumps(res, cls=JSONEncoder)
-        response = HttpResponse(json_res)
-        response['content-type'] = 'application/json'
-        return response
+        try:
+            adb = AllDatabase()
+            res = adb.find_deepth(request.GET)
+            json_res = json.dumps(res, cls=JSONEncoder)
+            response = HttpResponse(json_res)
+            response['content-type'] = 'application/json'
+            return response
+        except Exception as e:
+            print(str(e))
+            return JsonErrorResponse(5,str(e))
 
 
 class TOXML(View):
@@ -41,7 +45,7 @@ class CheckFile(View):
         file = requests.FILES.get('file')
         print("已接收到文件：", file)
         if file:
-            if file.name.split(".")[-1] != 'xlsx':
+            if file.name.split(".")[-1] not in ['xlsx','xls'] :
                 return JsonErrorResponse(1, "文件格式暂不识别,暂只支持.xlsx格式")
             path_dir = os.path.join(STATIC_ROOT, "upload")
             if not os.path.exists(path_dir):
@@ -88,17 +92,20 @@ class SearchByFile(View):
 
 class SearchPost(View):
     def get(self, requests, version, *args, **kwargs):
-        cid = requests.GET.get("cid")
-        ctype = requests.GET.get("ctype")
-        if not cid or not ctype:
-            return JsonErrorResponse(1, "没有接受到有效数据")
-        sp = SP(cid=cid, ctype=ctype)
-        res = sp.search()
-        if not res:
-            return JsonErrorResponse(2, "未查询到结果")
-        else:
-            bac = {
-                "errno": 0,
-                "data": res
-            }
-            return JsonResponse(bac)
+        try:
+            cid = requests.GET.get("cid")
+            ctype = requests.GET.get("ctype")
+            if not cid or not ctype:
+                return JsonErrorResponse(1, "没有接受到有效数据")
+            sp = SP(cid=cid, ctype=ctype)
+            res = sp.search()
+            if not res:
+                return JsonErrorResponse(2, "未查询到结果")
+            else:
+                bac = {
+                    "errno": 0,
+                    "data": res
+                }
+                return JsonResponse(bac)
+        except Exception as e:
+            return JsonErrorResponse(4,str(e))

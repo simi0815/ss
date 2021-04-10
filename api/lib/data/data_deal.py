@@ -66,20 +66,23 @@ class MeageData(object):
                         for o in p:
                             if o in e_list[i]["value"]:
                                 e_list[i]["position"].append(index)
-
+                                e_list[i]["value"].extend(p)
                                 flag = True
                                 break
                 if not flag:
                     e_list.append({"position": [index, ], "value": p})
-        print(e_list)
         mer_list = []
         need_del = []
+        need_mers = []
         for need_mer in e_list:
             if len(need_mer["position"]) <= 1:
                 continue
-            mer_dic = self._merge_all(need_mer["position"], res)
+            need_mers.append(need_mer["position"])
+        need_mers = deal_merge_list(need_mers)
+        for need_mer in need_mers:
+            mer_dic = self._merge_all(need_mer, res)
             mer_list.append(mer_dic)
-            need_del.extend(need_mer["position"])
+            need_del.extend(need_mer)
         res = array_dels(need_del, res)
         res.extend(mer_list)
         self.data = res
@@ -114,7 +117,7 @@ class MeageData(object):
         need_mers = deal_merge_list(need_mers)
         for need_mer in need_mers:
             mer_dic = self._merge_all(need_mer, res)
-            print("mer_dic",mer_dic)
+
             mer_list.append(mer_dic)
             need_del.extend(need_mer)
 

@@ -5,6 +5,7 @@ from api.utils.xml import store_xml
 
 FIELD_LIST = ["姓名", "地址", "出生日期", "性别", "电话", "邮箱", "用户名", "社交ID", "社交类型", "数据来源"]
 
+
 class XmlPostHander(object):
     def __init__(self, file, select_field):
         self.wb = openpyxl.load_workbook(file)
@@ -23,17 +24,19 @@ class XmlPostHander(object):
             try:
                 adb = AllDatabase()
                 for field, col_info in self.select_field.items():
-                    if col_info.get("isChecked") and col_info.get("col"):
+                    if col_info.get("isChecked") and col_info.get("col")+1:
                         col = col_info["col"]
                     else:
                         continue
+                    ctype = col_info.get("ctype")
                     col_val = str(row[col].value)
                     if col_val:
-                        res = adb.find({"val": col_val, "type": field})
+                        res = adb.find({"val": col_val, "type": field, "ctype": ctype})
                         if res["errno"] == 0:
                             stx = StoreToXML(res["data"]["all_data"])
                             data_list = stx.paser_content()
                             al_data.extend(data_list)
+
                 print("共得到{count}条结果".format(count=len(al_data)))
             except Exception as e:
                 msg = "查询第{count}条时出现错误:{e}".format(count=count, e=e)
@@ -41,6 +44,3 @@ class XmlPostHander(object):
                 al_data.append([msg])
         url = store_xml(al_data, FIELD_LIST, "ALL_INFO")
         return url
-
-
-
