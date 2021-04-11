@@ -12,10 +12,10 @@ class Searilizer():
         val = self.rd.get("val")
         type = self.rd.get("type")
         ctype = self.rd.get("ctype")
+        if not val or not type:
+            raise Exception("未检测到有效数据")
         if type in ["cid", "uname", "gid"] and not ctype:
             raise Exception("社交类型搜索未检测到社交类型")
-        if not val or not type:
-            return None
         val = str(val)
         con = {
             "val": val,
@@ -58,7 +58,7 @@ class AllDatabase(object):
             _res.extend(onr_all)
         # for i in _res:
         #     print(i)
-        back_re = self._clean_data(_res,res_dict)
+        back_re = self._clean_data(_res, res_dict)
 
         res = {
             "errno": 0,
@@ -115,6 +115,7 @@ class AllDatabase(object):
                     add_cur_emails_tels(one)
         return _one_all
 
+    # 全库检索
     def _find_in_all_db(self, con):
         back_re = []
         db = MongoDatabase()
@@ -125,31 +126,10 @@ class AllDatabase(object):
         back_re.extend(es_res)
         return back_re
 
-    def _clean_data(self, data,con):
+    # 清洗数据
+    def _clean_data(self, data, con):
         md = MeageData(data=data).clean_data()
-
-        return self._not_ctype_id(md,con)
-    def _not_ctype_id(self, data, con):
-        ctype = con.get("ctype")
-        if not ctype:
-            return data
-        _res = []
-        for one in data:
-            if not one.get("ctype"):
-                _res.append(one)
-
-            print(one.get("ctype"))
-            if isinstance(one.get("ctype"),list) :
-                if ctype in one.get("ctype"):
-                    print("ctype是列表{ctype}在列表中".format(ctype=ctype))
-                    _res.append(one)
-            else:
-                if ctype == one["ctype"]:
-
-                    _res.append(one)
-        return _res
-
-
+        return md
 
     def err_msg(self, errno, msg):
         return {
@@ -160,7 +140,7 @@ class AllDatabase(object):
 
 if __name__ == '__main__':
     adb = AllDatabase()
-    re = adb.find_deepth({"val": "1655092433", "type": "cid","ctype":"facebook"})
+    re = adb.find_deepth({"val": "1655092433", "type": "cid", "ctype": "facebook"})
     # re = adb.find_deepth({"val": "李某人", "type": "name"})
     if re["errno"] == 0:
         al_da = re["data"]["all_data"]

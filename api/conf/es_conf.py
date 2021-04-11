@@ -28,7 +28,7 @@ ES_DB_REFL = {
         "resource": 1
     },
     "twitter": {
-        "index": "'tw_user*'",
+        "index": "tw_user*",
         "field_refl": {
             "name": "name",
             "cid": "id",

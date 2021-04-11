@@ -17,20 +17,18 @@ CTYPE_REFLECT = {
 
 
 class StoreToXML(object):
-    def __init__(self, data, sheet_name="ALL_INFO"):
+    def __init__(self, data,strenth_col=None,sheet_name="ALL_INFO"):
         self.data = data
         self.sheet_name = sheet_name
-
+        self.strenth_col = strenth_col
     def paser_xml(self):
         d_list = self.paser_content()
-        url = store_xml(d_list, order_list, "INFO")
+        url = store_xml(d_list, order_list, strenth_col=self.strenth_col, sheet_name="INFO")
         return url
 
     def paser_content(self):
         data_list = []
-        print("self.data",self.data)
         for onr in self.data:
-
             name = onr.get("name", "")
             addr = onr.get("location", "")
             birthday = onr.get("birthday", "")

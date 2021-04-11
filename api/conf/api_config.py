@@ -13,6 +13,8 @@ MONGO_PORT = 27017
 REDIS_IP = '192.168.1.231'
 # redis port 地址
 REDIS_PORT = 6379
+# redis 数据过期时间 单位：s
+REDIS_EX_TIME = 60*60*2
 # 当前的通讯协议和ip地址或域名
 PROTOCOL_IP_OR_DOMAIN = "http://192.168.8.35:8000"
 # #231服务器的ip地址和域名

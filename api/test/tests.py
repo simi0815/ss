@@ -1,14 +1,12 @@
-def foo():
-    msg=  "hello"
-    def b():
-        nonlocal msg
-        print(msg)
-    b()
-foo()
+import openpyxl
+from openpyxl.styles.fonts import Font
+from openpyxl.styles import colors
+ws = openpyxl.load_workbook("text.xlsx")
+wb = ws.active
+
+rows = wb.iter_rows()
+print(wb.max_row)
+for row in rows:
+    print(row)
 
 
-def remove_cross(tel):
-    tel = str(tel)
-
-    return tel.replace("-","")
-print(remove_cross("1-316-871-3930"))

@@ -25,6 +25,9 @@ class ESDatabase():
     def _find_all(self, con):
         _res = []
         for index_info in ES_DB_REFL.values():
+            if con["type"] in ["cid", "uname", "gid"]:
+                if con["ctype"] != index_info.get("ctype"):
+                    continue
             index_res = self._get_index_res(con, index_info.get("index"), index_info.get("field_refl"),
                                             index_info.get("ctype",""),index_info.get("resource",""))
             _res.extend(index_res)
@@ -37,6 +40,7 @@ class ESDatabase():
     def _find_in_index(self, index_name, con, refl_dic):
         val = con.get("val")
         type = con.get("type")
+        print("将要在{index}里查询：{con}".format(index=index_name,con=con))
         if not val or not type or not refl_dic:
             return None
         if type == "name" and "first_name" in refl_dic.keys():

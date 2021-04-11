@@ -69,6 +69,10 @@ class MongoDatabase(object):
         cons = self._deal_con(condition)
         # 循环遍历数据库和集合，依次查询条件condition
         for db_col, info in MON_DB_REFL.items():
+            # 判断ctype，如果不符合直接跳过
+            if condition["type"] in ["cid", "uname", "gid"]:
+                if condition["ctype"] != info.get("ctype"):
+                    continue
             cur_cons = cons.copy()
             # 此处通过"."分离数据库和集合
             db, col = db_col.split(".")
